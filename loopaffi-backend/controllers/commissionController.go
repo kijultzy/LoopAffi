@@ -42,6 +42,10 @@ func HitungKomisi(c *gin.Context) {
 		totalPenjualan = sale.TotalAmount
 	} else {
 		for _, item := range sale.SaleItems {
+			// Gunakan keyword break jika ada anomali nilai negatif
+			if item.Subtotal < 0 {
+				break
+			}
 			totalPenjualan += item.Subtotal
 		}
 	}

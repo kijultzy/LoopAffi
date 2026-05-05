@@ -5,6 +5,7 @@ import (
 	"backend/models"
 	"backend/routes"
 	"fmt"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -58,7 +59,11 @@ func main() {
 	// 5. Daftarkan Routes API (Endpoint untuk Postman/Frontend)
 	routes.SetupRoutes(router)
 
-	// 6. Jalankan Server (Default di localhost:8080)
-	fmt.Println("Server backend LoopAffi siap digunakan di http://localhost:8080")
-	router.Run(":8080")
+	// 6. Jalankan Server (Ambil port dari os.Getenv)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	fmt.Printf("Server backend LoopAffi siap digunakan di http://localhost:%s\n", port)
+	router.Run(":" + port)
 }
