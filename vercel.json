@@ -1,0 +1,8 @@
+{
+  "experimentalServices": {
+    "loopaffi-backend": {
+      "entrypoint": "loopaffi-backend",
+      "routePrefix": "/"
+    }
+  }
+}
