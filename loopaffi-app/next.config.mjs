@@ -1,16 +1,6 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Turbopack perlu tahu lokasi node_modules yang berada di folder parent
-  turbopack: {
-    root: path.resolve(__dirname, ".."),
-  },
-  // Abaikan error saat build agar bisa dideploy sementara ada error merge
+  // Abaikan error TypeScript dan ESLint saat build (untuk deployment)
   typescript: {
     ignoreBuildErrors: true,
   },
