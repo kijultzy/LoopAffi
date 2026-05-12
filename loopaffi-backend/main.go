@@ -65,6 +65,21 @@ func main() {
 		c.Next()
 	})
 
+	api := engine.Group("/api")
+	api.GET("/migrate", func(c *gin.Context) {
+		sqlBytes, err := os.ReadFile("migrations/001_create_users.up.sql")
+		if err != nil {
+			c.JSON(500, gin.H{"error": "Cannot read migration file: " + err.Error()})
+			return
+		}
+		_, err = db.Exec(string(sqlBytes))
+		if err != nil {
+			c.JSON(500, gin.H{"error": "Migration failed: " + err.Error()})
+			return
+		}
+		c.JSON(200, gin.H{"message": "Database migrated successfully!"})
+	})
+
 	// 7. Setup Routes
 	router := routes.NewRouter(
 		engine,
