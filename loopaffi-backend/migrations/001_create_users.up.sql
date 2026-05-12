@@ -2,6 +2,7 @@
 DROP TABLE IF EXISTS payments CASCADE;
 DROP TABLE IF EXISTS commissions CASCADE;
 DROP TABLE IF EXISTS sales CASCADE;
+DROP TABLE IF EXISTS notifications CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS roles CASCADE;
 DROP TABLE IF EXISTS affiliates CASCADE;
@@ -50,6 +51,15 @@ CREATE TABLE payments (
     amount DECIMAL(15, 2) NOT NULL,
     date DATE NOT NULL,
     status VARCHAR(50) DEFAULT 'paid'
+);
+
+-- 6.5. Buat tabel Notifications
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    user_id VARCHAR(50) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- 7. ISI DATA AWAL
