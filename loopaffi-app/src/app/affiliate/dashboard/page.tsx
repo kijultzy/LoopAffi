@@ -65,7 +65,7 @@ export default function AffiliateDashboard() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
-                    { title: "Penjualan Rujukan", value: formatIDR(totalSalesAmount), sub: `${mySales.length} konversi`, icon: ShoppingCart },
+                    { title: "Penjualan Rujukan", value: formatIDR(totalSalesAmount), sub: `${sales.length} konversi`, icon: ShoppingCart },
                     { title: "Total Pendapatan", value: formatIDR(totalEarned), sub: "Komisi seumur hidup", icon: Coins },
                     { title: "Pembayaran Tertunda", value: formatIDR(pendingPayout), sub: "Akan diproses", icon: Clock },
                     { title: "Telah Dibayar", value: formatIDR(paidOut), sub: "Diterima sejauh ini", icon: TrendingUp },
