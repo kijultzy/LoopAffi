@@ -118,3 +118,20 @@ func (h *SaleHandler) GetAllSales(c *gin.Context) {
 		"data":   sales,
 	})
 }
+
+func (h *SaleHandler) GetMySales(c *gin.Context) {
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "Unauthorized"})
+		return
+	}
+	sales, err := h.saleRepo.FindByAffiliateID(userID.(string))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": "Gagal mengambil data penjualan"})
+		return
+	}
+	if sales == nil {
+		sales = []entity.Sale{}
+	}
+	c.JSON(http.StatusOK, gin.H{"status": "success", "data": sales})
+}

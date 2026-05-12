@@ -118,3 +118,26 @@ export async function markPaymentPaid(paymentId: string): Promise<void> {
         throw new Error(json.message || "Gagal memperbarui status pembayaran");
     }
 }
+
+// ============ Affiliate API calls ============
+
+export async function fetchMySales(): Promise<DBSale[]> {
+    const res = await fetch(`${API_BASE}/affiliate/sales`, { headers: getAuthHeaders() });
+    const json = await res.json();
+    if (json.status === "success") return json.data || [];
+    throw new Error(json.message || "Gagal mengambil data penjualan Anda");
+}
+
+export async function fetchMyCommissions(): Promise<DBCommission[]> {
+    const res = await fetch(`${API_BASE}/affiliate/commissions`, { headers: getAuthHeaders() });
+    const json = await res.json();
+    if (json.status === "success") return json.data || [];
+    throw new Error(json.message || "Gagal mengambil data komisi Anda");
+}
+
+export async function fetchMyPayments(): Promise<DBPayment[]> {
+    const res = await fetch(`${API_BASE}/affiliate/payments`, { headers: getAuthHeaders() });
+    const json = await res.json();
+    if (json.status === "success") return json.data || [];
+    throw new Error(json.message || "Gagal mengambil data pembayaran Anda");
+}

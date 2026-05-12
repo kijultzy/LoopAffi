@@ -1,7 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useAppStore } from "@/lib/store";
+import { fetchMySales, DBSale } from "@/lib/api";
 import { formatIDR } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -12,11 +15,26 @@ import {
 } from "@/components/ui/table";
 
 export default function AffiliateSalesPage() {
-    const { currentUser, sales, globalCommissionRate } = useAppStore();
+    const { currentUser, globalCommissionRate } = useAppStore();
+    const [sales, setSales] = useState<DBSale[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const loadSales = async () => {
+            setIsLoading(true);
+            try {
+                const data = await fetchMySales();
+                setSales(data);
+            } catch (err) {
+                console.error("Gagal memuat data penjualan:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        loadSales();
+    }, []);
 
     if (!currentUser) return null;
-
-    const mySales = sales.filter((s) => s.affiliateId === currentUser.id);
 
     return (
         <div className="max-w-6xl mx-auto space-y-8">
@@ -38,14 +56,23 @@ export default function AffiliateSalesPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {mySales.length === 0 ? (
+                        {isLoading ? (
+                            <TableRow>
+                                <TableCell colSpan={4} className="text-center py-8">
+                                    <div className="flex items-center justify-center gap-2 text-slate-500">
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        Memuat data penjualan...
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ) : sales.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={4} className="text-center text-slate-500 py-8">
                                     Belum ada transaksi penjualan di akun Anda.
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            mySales.map((sale) => (
+                            sales.map((sale) => (
                                 <TableRow key={sale.id}>
                                     <TableCell>{new Date(sale.date).toLocaleDateString()}</TableCell>
                                     <TableCell className="font-mono text-xs text-slate-500">{sale.id}</TableCell>

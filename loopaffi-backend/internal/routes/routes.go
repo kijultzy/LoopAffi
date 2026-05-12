@@ -77,5 +77,14 @@ func (r *Router) Setup() {
 			admin.PUT("/payments/:id/pay", r.paymentHandler.MarkAsPaid)
 			admin.GET("/reports", r.reportHandler.GetReport)
 		}
+
+		// Affiliate only
+		affiliate := protected.Group("/affiliate")
+		affiliate.Use(middleware.RoleMiddleware("affiliate"))
+		{
+			affiliate.GET("/sales", r.saleHandler.GetMySales)
+			affiliate.GET("/commissions", r.commissionHandler.GetMyCommissions)
+			affiliate.GET("/payments", r.paymentHandler.GetMyPayments)
+		}
 	}
 }

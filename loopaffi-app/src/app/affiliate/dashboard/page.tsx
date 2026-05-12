@@ -1,26 +1,60 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useAppStore } from "@/lib/store";
-import { TrendingUp, Coins, ShoppingCart, Clock, CheckCircle2 } from "lucide-react";
+import { fetchMySales, fetchMyCommissions, fetchMyPayments, DBSale, DBCommission, DBPayment } from "@/lib/api";
+import { TrendingUp, Coins, ShoppingCart, Clock, CheckCircle2, Loader2 } from "lucide-react";
 import { formatIDR } from "@/lib/utils";
 
 export default function AffiliateDashboard() {
-    const { currentUser, sales, commissions, payments } = useAppStore();
+    const { currentUser } = useAppStore();
+    const [sales, setSales] = useState<DBSale[]>([]);
+    const [commissions, setCommissions] = useState<DBCommission[]>([]);
+    const [payments, setPayments] = useState<DBPayment[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const loadData = async () => {
+            setIsLoading(true);
+            try {
+                const [salesData, commissionsData, paymentsData] = await Promise.all([
+                    fetchMySales(),
+                    fetchMyCommissions(),
+                    fetchMyPayments(),
+                ]);
+                setSales(salesData);
+                setCommissions(commissionsData);
+                setPayments(paymentsData);
+            } catch (err) {
+                console.error("Gagal memuat data dashboard afiliasi:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        loadData();
+    }, []);
 
     if (!currentUser) return null;
+    if (isLoading) {
+        return (
+            <div className="max-w-6xl mx-auto flex items-center justify-center py-20">
+                <div className="flex items-center gap-2 text-slate-500">
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Memuat data dashboard...
+                </div>
+            </div>
+        );
+    }
 
-    const mySales = sales.filter((s) => s.affiliateId === currentUser.id);
-    const myCommissions = commissions.filter((c) => c.affiliateId === currentUser.id);
-    const myPayments = payments.filter((p) => p.affiliateId === currentUser.id);
+    const totalSalesAmount = sales.reduce((acc, s) => acc + s.amount, 0);
+    const totalEarned = commissions.reduce((acc, c) => acc + c.amount, 0);
+    const pendingPayout = payments.filter((p) => p.status === "pending").reduce((acc, p) => acc + p.amount, 0);
+    const paidOut = payments.filter((p) => p.status === "paid").reduce((acc, p) => acc + p.amount, 0);
 
-    const totalSalesAmount = mySales.reduce((acc, s) => acc + s.amount, 0);
-    const totalEarned = myCommissions.reduce((acc, c) => acc + c.amount, 0);
-    const pendingPayout = myPayments.filter((p) => p.status === "pending").reduce((acc, p) => acc + p.amount, 0);
-    const paidOut = myPayments.filter((p) => p.status === "paid").reduce((acc, p) => acc + p.amount, 0);
-
-    const recentSales = [...mySales]
+    const recentSales = [...sales]
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .slice(0, 5);
+
 
     return (
         <div className="max-w-6xl mx-auto space-y-8">

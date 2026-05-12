@@ -1,7 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useAppStore } from "@/lib/store";
+import { fetchMyPayments, DBPayment } from "@/lib/api";
 import { formatIDR } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -12,11 +15,26 @@ import {
 } from "@/components/ui/table";
 
 export default function AffiliatePaymentsPage() {
-    const { currentUser, payments } = useAppStore();
+    const { currentUser } = useAppStore();
+    const [payments, setPayments] = useState<DBPayment[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const loadPayments = async () => {
+            setIsLoading(true);
+            try {
+                const data = await fetchMyPayments();
+                setPayments(data);
+            } catch (err) {
+                console.error("Gagal memuat data pembayaran:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        loadPayments();
+    }, []);
 
     if (!currentUser) return null;
-
-    const myPayments = payments.filter((p) => p.affiliateId === currentUser.id);
 
     return (
         <div className="max-w-6xl mx-auto space-y-8">
@@ -38,14 +56,23 @@ export default function AffiliatePaymentsPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {myPayments.length === 0 ? (
+                        {isLoading ? (
+                            <TableRow>
+                                <TableCell colSpan={4} className="text-center py-8">
+                                    <div className="flex items-center justify-center gap-2 text-slate-500">
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        Memuat data pembayaran...
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ) : payments.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={4} className="text-center text-slate-500 py-8">
                                     Belum ada pembayaran.
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            myPayments.map((payment) => (
+                            payments.map((payment) => (
                                 <TableRow key={payment.id}>
                                     <TableCell>{new Date(payment.date).toLocaleDateString()}</TableCell>
                                     <TableCell className="font-mono text-xs text-slate-500">{payment.id}</TableCell>
