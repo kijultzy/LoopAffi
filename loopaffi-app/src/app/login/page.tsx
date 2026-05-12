@@ -3,11 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppStore } from "@/lib/store";
-import { apiLogin } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Infinity } from "lucide-react";
+import { Infinity, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 
@@ -41,7 +40,7 @@ export default function LoginPage() {
                 localStorage.setItem("token", token);
                 
                 // Login ke store (pastikan store menerima struktur user yang benar)
-                login(user);
+                login(user, token);
 
                 // Redirect berdasarkan role_id (role_admin -> /admin, role_affiliate -> /affiliate)
                 const targetPath = user.role === "role_admin" ? "admin" : "affiliate";

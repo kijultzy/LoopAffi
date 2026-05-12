@@ -80,7 +80,7 @@ export const useAppStore = create<AppState>()(
             notifications: [],
             globalCommissionRate: 0.1, // 10%
             darkMode: false,
-            login: (user) => set({ currentUser: user, notifications: [] }),
+            login: (user, token) => set({ currentUser: user, token, notifications: [] }),
             logout: () => set({ currentUser: null, notifications: [] }),
             setNotifications: (notifications) => set({ notifications: notifications || [] }),
             toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),

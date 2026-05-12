@@ -22,7 +22,7 @@ export function ClientWrapper({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         if (!mounted) return;
 
-        const isAuthRoute = pathname === "/login" || pathname === "/register";
+        const isPublicRoute = PUBLIC_ROUTES.includes(pathname) || pathname === "/";
 
         // User belum login & bukan di halaman publik → tendang ke login
         if (!currentUser && !isPublicRoute) {
@@ -52,7 +52,7 @@ export function ClientWrapper({ children }: { children: React.ReactNode }) {
 
     if (!mounted) return null;
 
-    const isAuthRoute = pathname === "/login" || pathname === "/register";
+    const isPublicRoute = PUBLIC_ROUTES.includes(pathname) || pathname === "/";
 
     if (isPublicRoute) {
         return <>{children}</>;
