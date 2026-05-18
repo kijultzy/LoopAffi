@@ -9,13 +9,13 @@ import (
 
 // ReportAffiliateRow represents a single affiliate's aggregated report data
 type ReportAffiliateRow struct {
-	AffiliateID     string  `json:"affiliate_id"`
-	AffiliateName   string  `json:"affiliate_name"`
-	AffiliateEmail  string  `json:"affiliate_email"`
-	TotalSales      float64 `json:"total_sales"`
-	SalesCount      int     `json:"sales_count"`
-	TotalCommission float64 `json:"total_commission"`
-	PaidCommission  float64 `json:"paid_commission"`
+	AffiliateID       string  `json:"affiliate_id"`
+	AffiliateName     string  `json:"affiliate_name"`
+	AffiliateEmail    string  `json:"affiliate_email"`
+	TotalSales        float64 `json:"total_sales"`
+	SalesCount        int     `json:"sales_count"`
+	TotalCommission   float64 `json:"total_commission"`
+	PaidCommission    float64 `json:"paid_commission"`
 	PendingCommission float64 `json:"pending_commission"`
 }
 

@@ -105,3 +105,32 @@ func (s *AuthService) Register(req dto.RegisterRequest) (*dto.LoginResponse, err
 		},
 	}, nil
 }
+
+func (s *AuthService) ForgotPassword(req dto.ForgotPasswordRequest) error {
+	email := strings.TrimSpace(strings.ToLower(req.Email))
+
+	if len(req.NewPassword) < 6 {
+		return fmt.Errorf("password minimal 6 karakter")
+	}
+
+	user, err := s.userRepo.FindByEmail(email)
+	if err != nil {
+		return fmt.Errorf("gagal mencari user: %w", err)
+	}
+
+	if user == nil {
+		return fmt.Errorf("email tidak ditemukan")
+	}
+
+	hashedPassword, err := utils.HashPassword(req.NewPassword)
+	if err != nil {
+		return fmt.Errorf("gagal mengenkripsi password: %w", err)
+	}
+
+	err = s.userRepo.UpdatePasswordByEmail(email, hashedPassword)
+	if err != nil {
+		return fmt.Errorf("gagal mengubah password: %w", err)
+	}
+
+	return nil
+}
