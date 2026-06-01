@@ -45,7 +45,7 @@ func (r *UserRepository) CreateUser(user *entity.User) error {
 	if user.ID == "" {
 		user.ID = fmt.Sprintf("USR-%d", time.Now().Unix())
 	}
-	
+
 	query := `INSERT INTO users (id, name, email, password_hash, role_id, phone, status) 
 			  VALUES ($1, $2, $3, $4, $5, $6, $7) 
 			  RETURNING created_at, updated_at`
@@ -59,4 +59,26 @@ func (r *UserRepository) FindAll() ([]entity.User, error) {
 		return nil, fmt.Errorf("failed to fetch all users: %w", err)
 	}
 	return users, nil
+}
+
+func (r *UserRepository) UpdatePasswordByEmail(email string, hashedPassword string) error {
+	result, err := r.db.Exec(
+		"UPDATE users SET password_hash = $1, updated_at = NOW() WHERE email = $2",
+		hashedPassword,
+		email,
+	)
+	if err != nil {
+		return fmt.Errorf("failed to update password: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to check updated rows: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return sql.ErrNoRows
+	}
+
+	return nil
 }

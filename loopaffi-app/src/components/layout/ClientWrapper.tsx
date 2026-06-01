@@ -7,7 +7,7 @@ import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 
 // Daftar halaman publik yang bisa diakses TANPA login
-const PUBLIC_ROUTES = ["/login", "/register"];
+const PUBLIC_ROUTES = ["/login", "/register", "/forgot-password"];
 
 export function ClientWrapper({ children }: { children: React.ReactNode }) {
     const router = useRouter();

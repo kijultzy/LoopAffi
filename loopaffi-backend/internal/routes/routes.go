@@ -7,15 +7,15 @@ import (
 )
 
 type Router struct {
-	engine           *gin.Engine
-	authHandler      *handler.AuthHandler
-	userHandler      *handler.UserHandler
-	notifHandler     *handler.NotificationHandler
-	saleHandler      *handler.SaleHandler
+	engine            *gin.Engine
+	authHandler       *handler.AuthHandler
+	userHandler       *handler.UserHandler
+	notifHandler      *handler.NotificationHandler
+	saleHandler       *handler.SaleHandler
 	commissionHandler *handler.CommissionHandler
-	paymentHandler   *handler.PaymentHandler
-	reportHandler    *handler.ReportHandler
-	jwtSecret        string
+	paymentHandler    *handler.PaymentHandler
+	reportHandler     *handler.ReportHandler
+	jwtSecret         string
 }
 
 func NewRouter(
@@ -30,15 +30,15 @@ func NewRouter(
 	jwtSecret string,
 ) *Router {
 	return &Router{
-		engine:           engine,
-		authHandler:      authHandler,
-		userHandler:      userHandler,
-		notifHandler:     notifHandler,
-		saleHandler:      saleHandler,
+		engine:            engine,
+		authHandler:       authHandler,
+		userHandler:       userHandler,
+		notifHandler:      notifHandler,
+		saleHandler:       saleHandler,
 		commissionHandler: commissionHandler,
-		paymentHandler:   paymentHandler,
-		reportHandler:    reportHandler,
-		jwtSecret:        jwtSecret,
+		paymentHandler:    paymentHandler,
+		reportHandler:     reportHandler,
+		jwtSecret:         jwtSecret,
 	}
 }
 
@@ -55,6 +55,7 @@ func (r *Router) Setup() {
 	{
 		auth.POST("/login", r.authHandler.Login)
 		auth.POST("/register", r.authHandler.Register)
+		auth.POST("/forgot-password", r.authHandler.ForgotPassword)
 	}
 
 	// Protected routes

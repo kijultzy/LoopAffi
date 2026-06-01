@@ -73,3 +73,20 @@ func (h *AuthHandler) Register(c *gin.Context) {
 
 	response.Created(c, "Registrasi berhasil", result)
 }
+
+func (h *AuthHandler) ForgotPassword(c *gin.Context) {
+	var req dto.ForgotPasswordRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.BadRequest(c, "Request tidak valid: "+err.Error())
+		return
+	}
+
+	err := h.authService.ForgotPassword(req)
+	if err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+
+	response.OK(c, "Password berhasil diubah. Silakan login dengan password baru.", nil)
+}
