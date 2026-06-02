@@ -36,7 +36,7 @@ Tujuan utama dari pengembangan sistem ini adalah meningkatkan efisiensi operasio
 
 ### ERD
 
-<img src="asset/ERD.png" alt="ERD" width="100%">
+<img src="asset/ERD-new.png" alt="ERD" width="100%">
 
 ---
 
