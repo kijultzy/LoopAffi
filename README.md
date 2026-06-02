@@ -34,6 +34,10 @@ Tujuan utama dari pengembangan sistem ini adalah meningkatkan efisiensi operasio
 
 <img src="asset/DFD 1.png" alt="DFD Level 1" width="100%">
 
+### ERD
+
+<img src="asset/ERD.png" alt="ERD" width="100%">
+
 ---
 
 ## 🎨 Mockup Antarmuka
