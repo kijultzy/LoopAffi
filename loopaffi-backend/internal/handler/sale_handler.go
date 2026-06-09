@@ -44,10 +44,11 @@ func (h *SaleHandler) CreateSale(c *gin.Context) {
 	}
 
 	now := time.Now()
+	dateStr := now.Format("2006-01-02")
 
 	sale := &entity.Sale{
 		ID:          uuid.New().String(),
-		Date:        now,
+		Date:        dateStr,
 		Amount:      input.Amount,
 		AffiliateID: input.AffiliateID,
 		Status:      "completed",
@@ -60,7 +61,6 @@ func (h *SaleHandler) CreateSale(c *gin.Context) {
 
 	// Hitung komisi (10%)
 	commissionAmount := input.Amount * 0.1
-	dateStr := now.Format("2006-01-02")
 
 	// Buat commission record di database
 	commission := &entity.Commission{
